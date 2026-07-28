@@ -1,298 +1,364 @@
+# ============================================================
+# RIVER AI RANGERS — AI Assistant (Cloud Version)
+# ============================================================
+# Runs on Streamlit Community Cloud.
+# AI powered by Anthropic Claude (claude-haiku-4-5-20251001).
+# River data loaded from CSV uploaded by the river group.
+#
+# Deploy: push to GitHub → connect to share.streamlit.io
+# Add secret: ANTHROPIC_API_KEY in Streamlit Cloud app settings
+# ============================================================
+
 import streamlit as st
-import pandas as pd
 import requests
 import json
-from datetime import datetime
+import pandas as pd
+import io
 
-# ── Page config ──────────────────────────────────────────────────────────────
+# ============================================================
+# CONFIGURATION
+# ============================================================
+
+CLAUDE_API_URL = "https://api.anthropic.com/v1/messages"
+MODEL = "claude-haiku-4-5-20251001"  # fast and cheap for classroom use
+                                      # upgrade to "claude-sonnet-4-6" for richer answers
+
 st.set_page_config(
     page_title="River AI Rangers",
     page_icon="🌊",
     layout="wide",
-    initial_sidebar_state="expanded",
 )
 
-# ── Custom CSS ────────────────────────────────────────────────────────────────
-st.markdown("""
-<style>
-    /* Main background */
-    .stApp { background-color: #f0f8f5; }
+# ============================================================
+# ANTHROPIC API KEY
+# ============================================================
+# On Streamlit Cloud: add ANTHROPIC_API_KEY in App Settings → Secrets
+# Locally: create .streamlit/secrets.toml with ANTHROPIC_API_KEY = "your-key"
 
-    /* Header */
-    .river-header {
-        background: linear-gradient(135deg, #0F6E56, #1D9E75);
-        color: white;
-        padding: 2rem;
-        border-radius: 16px;
-        margin-bottom: 1.5rem;
-        text-align: center;
-    }
-    .river-header h1 { font-size: 2.4rem; margin: 0; }
-    .river-header p  { font-size: 1.1rem; margin: 0.5rem 0 0; opacity: 0.9; }
-
-    /* Metric cards */
-    .metric-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1rem 1.2rem;
-        border: 1px solid #e0f0ea;
-        text-align: center;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
-    .metric-label { font-size: 0.8rem; color: #666; margin-bottom: 4px; }
-    .metric-value { font-size: 1.8rem; font-weight: bold; }
-    .metric-status { font-size: 0.75rem; margin-top: 4px; }
-    .good  { color: #0F6E56; }
-    .warn  { color: #BA7517; }
-    .bad   { color: #A32D2D; }
-
-    /* Chat bubbles */
-    .bubble-user {
-        background: #0F6E56;
-        color: white;
-        padding: 0.8rem 1.2rem;
-        border-radius: 18px 18px 4px 18px;
-        margin: 0.5rem 0 0.5rem 3rem;
-        font-size: 0.95rem;
-    }
-    .bubble-ai {
-        background: white;
-        color: #1a1a1a;
-        padding: 0.8rem 1.2rem;
-        border-radius: 18px 18px 18px 4px;
-        margin: 0.5rem 3rem 0.5rem 0;
-        font-size: 0.95rem;
-        border: 1px solid #d0e8df;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    }
-    .bubble-label {
-        font-size: 0.75rem;
-        color: #888;
-        margin-bottom: 2px;
-    }
-
-    /* Prompt chips */
-    .stButton > button {
-        background: white;
-        border: 1.5px solid #1D9E75;
-        color: #0F6E56;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        padding: 0.3rem 0.9rem;
-        transition: all 0.15s;
-    }
-    .stButton > button:hover {
-        background: #0F6E56;
-        color: white;
-    }
-
-    /* Hide default streamlit elements */
-    #MainMenu, footer, header { visibility: hidden; }
-</style>
-""", unsafe_allow_html=True)
-
-# ── Helper: status colour ─────────────────────────────────────────────────────
-def ph_status(v):
-    if 6.5 <= v <= 8.5: return "good", "✅ Healthy"
-    if 6.0 <= v < 6.5 or 8.5 < v <= 9.0: return "warn", "⚠️ Borderline"
-    return "bad", "❌ Concern"
-
-def nitrate_status(v):
-    if v < 5:  return "good", "✅ Good"
-    if v < 10: return "warn", "⚠️ Moderate"
-    return "bad", "❌ High"
-
-def phosphate_status(v):
-    if v < 0.1:  return "good", "✅ Good"
-    if v < 0.3:  return "warn", "⚠️ Elevated"
-    return "bad", "❌ High"
-
-# ── Helper: ask Ollama ────────────────────────────────────────────────────────
-def ask_ollama(prompt, model="mistral"):
+def get_api_key():
     try:
-        response = requests.post(
-            "http://localhost:11434/api/generate",
-            json={"model": model, "prompt": prompt, "stream": False},
-            timeout=60,
-        )
-        return response.json().get("response", "Sorry, I could not generate a response.")
-    except requests.exceptions.ConnectionError:
-        return (
-            "🔌 I can't connect to Ollama right now. "
-            "Please make sure Ollama is running (`ollama serve`) "
-            "and that you have pulled a model (`ollama pull mistral`)."
-        )
+        return st.secrets["ANTHROPIC_API_KEY"]
+    except Exception:
+        return None
+
+# ============================================================
+# SYSTEM PROMPT
+# ============================================================
+# Rebuilt on every message so river readings are always current.
+
+def build_system_prompt(river_name, ph, nitrates, phosphates, extra_columns=None):
+    extra = ""
+    if extra_columns:
+        extra = "\nADDITIONAL READINGS FROM THE RIVER GROUP:\n"
+        for col, val in extra_columns.items():
+            extra += f"- {col}: {val}\n"
+
+    return f"""You are a friendly river science assistant for the River AI Rangers project.
+You are helping children aged 7 to 11 investigate the health of their local river.
+
+TODAY'S RIVER READINGS for {river_name}:
+- pH: {ph}
+- Nitrates: {nitrates} mg/L
+- Phosphates: {phosphates} mg/L{extra}
+
+YOUR ROLE:
+- Explain what these numbers mean for river life in simple, clear language
+- Help children understand where pollution comes from and what they can do about it
+- Encourage children to question your answers and think for themselves
+- Always connect your answer back to the real river readings above
+
+YOUR RULES:
+- Never use words a 7-year-old would not understand without explaining them first
+- Never invent data or pretend to know things you don't know
+- If you are unsure, say so and suggest the child asks a real river scientist
+- Keep answers to 3–5 sentences. Children can ask follow-up questions.
+- Remind children you are a tool to help them think, not an expert who is always right
+
+HEALTHY RANGES:
+- pH: 6.5 to 8.5 is healthy
+- Nitrates: below 10 mg/L is healthy
+- Phosphates: below 0.1 mg/L is healthy
+
+Remember: the child is the scientist. You are the tool."""
+
+
+# ============================================================
+# CLAUDE API CALL
+# ============================================================
+# Claude's Messages API separates the system prompt from the
+# conversation history — we pass system separately, then the
+# user/assistant turns as the messages list.
+# Streaming returns server-sent events we parse line by line.
+
+def ask_claude(system_prompt, messages, api_key):
+    headers = {
+        "x-api-key": api_key,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+    }
+    payload = {
+        "model": MODEL,
+        "system": system_prompt,
+        "messages": messages,       # list of {role, content} — no system role here
+        "stream": True,
+        "max_tokens": 400,          # keeps answers child-length
+        "temperature": 0.5,
+    }
+    return requests.post(CLAUDE_API_URL, headers=headers, json=payload, stream=True, timeout=30)
+
+
+# ============================================================
+# CSV LOADER
+# ============================================================
+# The river group exports their monitoring data as a CSV.
+# We expect at minimum: date, pH, nitrates, phosphates.
+# Any extra columns (temperature, dissolved oxygen, etc.)
+# are passed to the system prompt as additional readings.
+
+def load_csv(uploaded_file):
+    try:
+        df = pd.read_csv(uploaded_file)
+        df.columns = [c.strip().lower() for c in df.columns]
+        return df, None
     except Exception as e:
-        return f"Something went wrong: {e}"
+        return None, str(e)
 
-# ── Build AI prompt ───────────────────────────────────────────────────────────
-def build_prompt(question, site_data):
-    readings = "\n".join([
-        f"- Site {row['site_name']}: pH {row['pH']}, "
-        f"Nitrates {row['nitrates_mg_per_L']} mg/L, "
-        f"Phosphates {row['phosphates_mg_per_L']} mg/L"
-        for _, row in site_data.iterrows()
-    ])
-    return f"""You are a friendly river science assistant helping primary school children 
-(aged 7-11) learn about river health. Always explain things in simple, 
-encouraging language a 9-year-old would understand. Use short sentences.
-Mention real animals like fish, mayflies, and kingfishers where relevant.
+def get_latest_readings(df):
+    """Return the most recent row from the CSV as a dict."""
+    # Try to find a date column and sort by it
+    date_cols = [c for c in df.columns if "date" in c]
+    if date_cols:
+        df = df.sort_values(date_cols[0], ascending=False)
+    latest = df.iloc[0].to_dict()
+    return latest
 
-Current river data:
-{readings}
+def extract_reading(row, *possible_names):
+    """Try multiple column name variants to find a value."""
+    for name in possible_names:
+        for col in row:
+            if name in col.lower():
+                try:
+                    return float(row[col])
+                except (ValueError, TypeError):
+                    pass
+    return None
 
-Child's question: {question}
 
-Please give a helpful, age-appropriate answer in 3-5 sentences. 
-End with one encouraging sentence about what children can do to help."""
+# ============================================================
+# SIDEBAR — river data + CSV upload
+# ============================================================
 
-# ── Session state ─────────────────────────────────────────────────────────────
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-if "data" not in st.session_state:
-    st.session_state.data = pd.DataFrame([
-        {"site_name": "Upstream woodland",   "pH": 7.2, "nitrates_mg_per_L": 2.1,  "phosphates_mg_per_L": 0.04},
-        {"site_name": "Town edge bridge",    "pH": 6.8, "nitrates_mg_per_L": 18.7, "phosphates_mg_per_L": 0.41},
-        {"site_name": "Farm outflow",        "pH": 6.5, "nitrates_mg_per_L": 24.3, "phosphates_mg_per_L": 0.68},
-    ])
-
-# ── SIDEBAR ───────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("### 🌊 River AI Rangers")
-    st.markdown("---")
+    st.image("https://em-content.zobj.net/source/twitter/376/water-wave_1f30a.png", width=60)
+    st.title("River AI Rangers")
+    st.caption("Powered by Anthropic Claude · Open-source · Free to use")
+    st.divider()
 
-    st.markdown("**📊 Load your own data**")
-    uploaded = st.file_uploader("Upload CSV", type=["csv"], label_visibility="collapsed")
-    if uploaded:
-        try:
-            st.session_state.data = pd.read_csv(uploaded)
-            st.success("Data loaded!")
-        except Exception as e:
-            st.error(f"Could not read file: {e}")
+    # --- CSV Upload ---
+    st.subheader("📂 Upload River Data")
+    st.caption("Upload a CSV from your river group. Needs columns for pH, nitrates, phosphates.")
 
-    st.markdown("---")
-    st.markdown("**🤖 AI Model**")
-    model_choice = st.selectbox(
-        "Ollama model",
-        ["mistral", "llama3", "phi3", "gemma"],
-        label_visibility="collapsed"
-    )
+    uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
-    st.markdown("---")
-    st.markdown("**ℹ️ About**")
-    st.markdown(
-        "River AI Rangers is a free, open-source toolkit "
-        "for primary school teachers. The AI runs entirely "
-        "on your device — no data leaves the school.\n\n"
-        "[📖 View on GitHub](https://github.com/Noelia-RG/river-ai-rangers)"
-    )
+    extra_columns = {}
 
-# ── HEADER ────────────────────────────────────────────────────────────────────
-st.markdown("""
-<div class="river-header">
-    <h1>🌊 River AI Rangers</h1>
-    <p>Ask questions about your river data and discover what it means for wildlife</p>
-</div>
-""", unsafe_allow_html=True)
+    if uploaded_file:
+        df, err = load_csv(uploaded_file)
+        if err:
+            st.error(f"Could not read CSV: {err}")
+            df = None
+        else:
+            st.success(f"✅ Loaded {len(df)} readings")
+            st.caption(f"Columns found: {', '.join(df.columns)}")
 
-# ── DATA DASHBOARD ────────────────────────────────────────────────────────────
-st.markdown("### 📊 Today's river readings")
+            latest = get_latest_readings(df)
 
-df = st.session_state.data
-cols = st.columns(len(df))
+            # Pull standard readings from CSV
+            csv_ph        = extract_reading(latest, "ph")
+            csv_nitrates  = extract_reading(latest, "nitrate")
+            csv_phosphates = extract_reading(latest, "phosphate")
 
-for i, (_, row in df.iterrows()):
-    with cols[i]:
-        ph_cls, ph_lbl   = ph_status(row["pH"])
-        no3_cls, no3_lbl = nitrate_status(row["nitrates_mg_per_L"])
-        po4_cls, po4_lbl = phosphate_status(row["phosphates_mg_per_L"])
-        st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-label">📍 {row['site_name']}</div>
-            <div style="margin: 8px 0; border-top: 1px solid #eee; padding-top: 8px;">
-                <div class="metric-label">pH</div>
-                <div class="metric-value {ph_cls}">{row['pH']}</div>
-                <div class="metric-status {ph_cls}">{ph_lbl}</div>
-            </div>
-            <div style="margin: 8px 0; border-top: 1px solid #eee; padding-top: 8px;">
-                <div class="metric-label">Nitrates (mg/L)</div>
-                <div class="metric-value {no3_cls}">{row['nitrates_mg_per_L']}</div>
-                <div class="metric-status {no3_cls}">{no3_lbl}</div>
-            </div>
-            <div style="margin: 8px 0; border-top: 1px solid #eee; padding-top: 8px;">
-                <div class="metric-label">Phosphates (mg/L)</div>
-                <div class="metric-value {po4_cls}">{row['phosphates_mg_per_L']}</div>
-                <div class="metric-status {po4_cls}">{po4_lbl}</div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+            # Anything else goes into extra_columns for the system prompt
+            standard_keys = {"ph", "nitrate", "phosphate", "date", "site", "river", "location"}
+            for col, val in latest.items():
+                if not any(k in col for k in standard_keys):
+                    extra_columns[col] = val
 
-st.markdown("<br>", unsafe_allow_html=True)
-
-# ── CHAT INTERFACE ────────────────────────────────────────────────────────────
-st.markdown("### 💬 Ask the River Ranger AI")
-
-# Render existing messages
-for msg in st.session_state.messages:
-    if msg["role"] == "user":
-        st.markdown(f"""
-        <div class="bubble-label" style="text-align:right">You</div>
-        <div class="bubble-user">{msg['content']}</div>
-        """, unsafe_allow_html=True)
+            st.caption("Using most recent entry from CSV.")
     else:
-        st.markdown(f"""
-        <div class="bubble-label">🌊 River Ranger AI</div>
-        <div class="bubble-ai">{msg['content']}</div>
-        """, unsafe_allow_html=True)
+        csv_ph = csv_nitrates = csv_phosphates = None
 
-# Suggested prompts
-st.markdown("**💡 Try asking:**")
-prompt_cols = st.columns(3)
-suggestions = [
-    "What does the pH at Site C mean for fish?",
-    "Why are nitrates so high downstream?",
-    "Which site is healthiest and why?",
-    "What animals would struggle in Site C?",
-    "What can we do to help our river?",
-    "Is the water safe for swimming?",
-]
-for i, suggestion in enumerate(suggestions):
-    with prompt_cols[i % 3]:
-        if st.button(suggestion, key=f"sug_{i}"):
-            with st.spinner("🌊 Thinking..."):
-                answer = ask_ollama(
-                    build_prompt(suggestion, df),
-                    model=model_choice
-                )
-            st.session_state.messages.append({"role": "user",      "content": suggestion})
-            st.session_state.messages.append({"role": "assistant", "content": answer})
-            st.rerun()
+    st.divider()
 
-# Free-text input
-st.markdown("<br>", unsafe_allow_html=True)
-with st.form("chat_form", clear_on_submit=True):
-    col1, col2 = st.columns([5, 1])
-    with col1:
-        user_input = st.text_input(
-            "Your question",
-            placeholder="Type your question about the river...",
-            label_visibility="collapsed"
-        )
-    with col2:
-        submitted = st.form_submit_button("Ask 🌊", use_container_width=True)
+    # --- Manual entry (fallback or override) ---
+    st.subheader("📊 River Readings")
+    st.caption("Pre-filled from CSV if uploaded. Edit to override.")
 
-    if submitted and user_input.strip():
-        with st.spinner("🌊 Thinking..."):
-            answer = ask_ollama(
-                build_prompt(user_input, df),
-                model=model_choice
-            )
-        st.session_state.messages.append({"role": "user",      "content": user_input})
-        st.session_state.messages.append({"role": "assistant", "content": answer})
-        st.rerun()
+    river_name  = st.text_input("River name", value="Our Local River")
+    ph          = st.number_input("pH", 0.0, 14.0,
+                                  value=float(csv_ph) if csv_ph else 7.2, step=0.1,
+                                  help="Healthy: 6.5 – 8.5")
+    nitrates    = st.number_input("Nitrates (mg/L)", 0.0, 100.0,
+                                  value=float(csv_nitrates) if csv_nitrates else 5.0, step=0.5,
+                                  help="Healthy: below 10 mg/L")
+    phosphates  = st.number_input("Phosphates (mg/L)", 0.0, 10.0,
+                                  value=float(csv_phosphates) if csv_phosphates else 0.08, step=0.01,
+                                  help="Healthy: below 0.1 mg/L")
 
-# Clear chat
-if st.session_state.messages:
-    if st.button("🗑️ Clear conversation"):
+    # Quick health check
+    st.divider()
+    st.subheader("🩺 Health Check")
+    st.write(f"pH {ph}: {'✅ Healthy' if 6.5 <= ph <= 8.5 else '⚠️ Outside range'}")
+    st.write(f"Nitrates {nitrates} mg/L: {'✅ Healthy' if nitrates < 10 else '⚠️ Outside range'}")
+    st.write(f"Phosphates {phosphates} mg/L: {'✅ Healthy' if phosphates < 0.1 else '⚠️ Outside range'}")
+
+    st.divider()
+    if st.button("🗑️ Clear chat", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
+
+    st.caption("☁️ AI runs via Anthropic Claude. River readings stay in your browser session.")
+
+
+# ============================================================
+# MAIN AREA — prompt cards + chat
+# ============================================================
+
+st.title("🌊 River AI Rangers")
+st.markdown(
+    f"**River:** {river_name} &nbsp;|&nbsp; "
+    f"pH: `{ph}` &nbsp;|&nbsp; "
+    f"Nitrates: `{nitrates} mg/L` &nbsp;|&nbsp; "
+    f"Phosphates: `{phosphates} mg/L`"
+)
+st.divider()
+
+# --- Prompt cards ---
+st.subheader("💬 Ask a question")
+st.caption("Click a card to get started, or type your own question below.")
+
+col1, col2, col3, col4, col5 = st.columns(5)
+
+if "prefill" not in st.session_state:
+    st.session_state.prefill = ""
+
+with col1:
+    st.markdown("**🔵 The numbers**")
+    if st.button(f"Is pH {ph} healthy?", use_container_width=True):
+        st.session_state.prefill = f"Our river has a pH of {ph}. Is that healthy for the fish and insects living there? Please explain in simple words."
+    if st.button(f"Nitrates at {nitrates} mg/L?", use_container_width=True):
+        st.session_state.prefill = f"Our river's nitrate level is {nitrates} mg/L. What does that mean for the river? Is it safe?"
+    if st.button(f"Phosphates at {phosphates}?", use_container_width=True):
+        st.session_state.prefill = f"Our river has {phosphates} mg/L of phosphates. What causes phosphates to get into rivers, and is our level worrying?"
+
+with col2:
+    st.markdown("**🟢 Wildlife**")
+    if st.button("What lives in our river?", use_container_width=True):
+        st.session_state.prefill = f"If a river has pH {ph}, nitrates {nitrates} mg/L, and phosphates {phosphates} mg/L, what animals and plants might live in it?"
+    if st.button("Most sensitive animals?", use_container_width=True):
+        st.session_state.prefill = "Which animals are most sensitive to pollution in rivers? Would they survive in our river?"
+    if st.button("What is an algae bloom?", use_container_width=True):
+        st.session_state.prefill = "What is an algae bloom and why is it bad for rivers? Could it happen in our river?"
+
+with col3:
+    st.markdown("**🟡 Pollution**")
+    if st.button("Where does pollution come from?", use_container_width=True):
+        st.session_state.prefill = "Where do nitrates and phosphates in rivers usually come from? Can you give me some examples?"
+    if st.button("How do farms affect rivers?", use_container_width=True):
+        st.session_state.prefill = "How do farms affect river water quality? What is fertiliser run-off?"
+    if st.button("What is sewage overflow?", use_container_width=True):
+        st.session_state.prefill = "What is sewage overflow and how does it affect rivers?"
+
+with col4:
+    st.markdown("**🔴 Take action**")
+    if st.button("Who is responsible?", use_container_width=True):
+        st.session_state.prefill = "Who is responsible for keeping rivers clean? What can ordinary people do?"
+    if st.button("Help me write a letter", use_container_width=True):
+        st.session_state.prefill = "I want to write a letter to my local council about our river's water quality. What should I include?"
+    if st.button("What is citizen science?", use_container_width=True):
+        st.session_state.prefill = "What is citizen science? How do ordinary people help monitor rivers?"
+
+with col5:
+    st.markdown("**🟣 Question the AI**")
+    if st.button("How sure are you?", use_container_width=True):
+        st.session_state.prefill = "How confident are you about what you just told me? Could any of it be wrong?"
+    if st.button("How could I check?", use_container_width=True):
+        st.session_state.prefill = "Where does this information come from? How could I check if it's true?"
+    if st.button("What don't you know?", use_container_width=True):
+        st.session_state.prefill = "Is there anything you don't know about this topic that I should find out from a real scientist?"
+
+st.divider()
+
+
+# ============================================================
+# CHAT LOOP
+# ============================================================
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Display history
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# Input
+user_input = st.chat_input("Ask a question about our river...")
+
+if st.session_state.prefill and not user_input:
+    user_input = st.session_state.prefill
+    st.session_state.prefill = ""
+
+if user_input:
+    api_key = get_api_key()
+
+    if not api_key:
+        st.error(
+            "⚠️ No API key found. "
+            "Add ANTHROPIC_API_KEY to your Streamlit Cloud app secrets, "
+            "or create .streamlit/secrets.toml locally with: ANTHROPIC_API_KEY = 'your-key'"
+        )
+        st.stop()
+
+    st.session_state.messages.append({"role": "user", "content": user_input})
+    with st.chat_message("user"):
+        st.markdown(user_input)
+
+    # Claude API: system prompt is separate from messages.
+    # Messages list contains only user/assistant turns.
+    system_prompt = build_system_prompt(river_name, ph, nitrates, phosphates, extra_columns)
+
+    with st.chat_message("assistant"):
+        placeholder = st.empty()
+        full_response = ""
+
+        try:
+            response = ask_claude(system_prompt, st.session_state.messages, api_key)
+
+            # Claude streams server-sent events in this format:
+            # event: content_block_delta
+            # data: {"type": "content_block_delta", "delta": {"text": "..."}}
+            for line in response.iter_lines():
+                if line:
+                    line = line.decode("utf-8")
+                    if line.startswith("data: "):
+                        data = line[6:]
+                        try:
+                            chunk = json.loads(data)
+                            if chunk.get("type") == "content_block_delta":
+                                text = chunk.get("delta", {}).get("text", "")
+                                full_response += text
+                                placeholder.markdown(full_response + "▌")
+                        except json.JSONDecodeError:
+                            pass
+
+            placeholder.markdown(full_response)
+
+        except requests.exceptions.Timeout:
+            full_response = "⚠️ The request timed out. Please try again."
+            placeholder.warning(full_response)
+        except Exception as e:
+            full_response = f"⚠️ Something went wrong: {str(e)}"
+            placeholder.error(full_response)
+
+    st.session_state.messages.append({"role": "assistant", "content": full_response})
