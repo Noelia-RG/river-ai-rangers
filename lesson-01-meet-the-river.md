@@ -1,145 +1,128 @@
-# Lesson 1 — Meet the River
+River AI Rangers — Lesson 1
+Is Our River Healthy? Reading the Water
+Age group: 11–16 (KS3/KS4)
+Duration: 60 minutes
+Subject links: Science, Geography, English, Citizenship
+Materials needed: Printed worksheets, real water-quality data from your local river group, browser access to river-ai-rangers.streamlit.app, projector or screen (optional)
 
-**Subject**: Science / Environmental education  
-**Year group**: Years 3–6 (ages 7–11)  
-**Duration**: 60 minutes  
-**Prior knowledge needed**: None — this is an introductory lesson
 
----
-
-## Learning objectives
-
+Learning Objectives
 By the end of this lesson, pupils will be able to:
 
-- Describe what a healthy river needs to survive
-- Identify at least three signs of pollution in a river
-- Explain what pH, nitrates, and phosphates are in simple terms
-- Ask a question they would like to investigate about their local river
+Read and describe three river water-quality measurements: pH, nitrates, and phosphates
+Use an AI assistant to help them interpret what those numbers mean for river life
+Produce one piece of civic writing addressed to a real audience
 
----
 
-## Resources needed
+Teacher Background (read before teaching)
+Your local river action group has provided real water-quality readings from your river. These come from volunteers who visit the river regularly and test the water. The three measurements pupils will work with are:
 
-| Resource | Notes |
-|---|---|
-| `worksheet-01-river-detective.md` (printed) | One per pupil |
-| `data/sample-readings.csv` | Displayed on screen, or printed |
-| Access to an AI assistant | Local Ollama setup or any LLM; optional |
-| Images of a healthy vs polluted river | Free images from Wikimedia Commons |
-| Coloured pencils or pens | For the river health scale activity |
+pH — measures how acidic or alkaline the water is. Healthy rivers sit between 6.5 and 8.5. Below 6 or above 9 stresses fish and invertebrates.
+Nitrates — come mainly from fertiliser run-off and sewage. High levels cause algae blooms that suffocate other life. Safe level: below 10 mg/L.
+Phosphates — also from run-off and sewage. Fuel algae growth. Safe level: below 0.1 mg/L.
 
----
+You do not need to be an expert. The AI assistant will help pupils interpret the data — your role is to guide their questions and push them to think critically about what the AI tells them.
 
-## Lesson outline
 
-### Starter — What do you already know? (10 min)
+Lesson Structure
+1. Hook (5 minutes)
+Ask the class: "Has anyone ever been to a river near here? What did it look, smell, or sound like?"
 
-Show two images side by side: one healthy river with clear water, wildflowers and visible fish; one polluted river with murky water, algae bloom, and litter.
+Take 3–4 responses. Then say:
 
-Ask pupils:
-- What do you notice about each river?
-- Which river would you want to swim in? Which would you want to drink from?
-- What might have caused the difference?
+"Today we are going to find out whether our river is actually healthy — not by guessing, but by reading real data collected by scientists who visit it every month. We are going to use an AI assistant to help us understand what the numbers mean. And at the end, we are going to write something real, to a real person, about what we found."
 
-Take responses. Write key words on the board: **clean**, **healthy**, **polluted**, **toxic**, **wildlife**.
 
----
+2. Introduce the data (10 minutes)
+Write or display the real readings from your river group on the board. Use the format below (fill in your actual values):
 
-### Main activity 1 — The language of rivers (15 min)
+Measurement
+Our River Reading
+Healthy Range
+pH
+___
+6.5 – 8.5
+Nitrates
+___ mg/L
+Below 10 mg/L
+Phosphates
+___ mg/L
+Below 0.1 mg/L
 
-Introduce the three measurements we will be using throughout the project. Keep explanations simple and always connect to wildlife.
 
-**pH (how acid or alkaline the water is)**
-> "Imagine the river is a home. pH is like the temperature of a house. Most fish and insects like it around 7 — not too cold, not too hot. If it drops below 6 or rises above 9, it's like the heating breaking. Animals start to struggle."
+Ask: "Just looking at these numbers — do you think our river is healthy or not? Why?"
 
-**Nitrates (from fertiliser and sewage)**
-> "Nitrates are like too much food in the water. A tiny bit helps plants grow. Too much and certain plants go crazy — they take over and use up all the oxygen, which suffocates fish."
+Take a few guesses. Don't confirm or deny yet — the investigation will answer this.
 
-**Phosphates (from detergents and farming)**
-> "Phosphates are similar — they come from washing powder and farm run-off. When there are too many, you get thick green algae that blocks sunlight and poisons the water."
 
-Hand out **Worksheet 1 — River Detective**. Pupils complete the "What does it mean?" column using the explanation above.
+3. Worksheet investigation (15 minutes)
+Hand out the pupil worksheet. Pupils work individually or in pairs to:
 
----
+Record the readings
+Circle whether each reading is inside or outside the healthy range
+Write their first impression of what they think is happening in the river
 
-### Main activity 2 — Reading real data (20 min)
+Do not let pupils use the AI yet. This first pass is their own thinking.
 
-Display `sample-readings.csv` on the whiteboard or print a simplified version.
 
-| Site | Date | pH | Nitrates (mg/L) | Phosphates (mg/L) | Notes |
-|---|---|---|---|---|---|
-| Upstream (A) | March | 7.2 | 2.1 | 0.04 | Clear water, caddisfly larvae visible |
-| Town centre (B) | March | 6.8 | 18.7 | 0.41 | Slight brown tint, fewer invertebrates |
-| Downstream (C) | March | 6.5 | 24.3 | 0.68 | Algae visible, no invertebrates counted |
+4. AI investigation (20 minutes)
+Open the River AI Rangers AI assistant in a browser at river-ai-rangers.streamlit.app. Model the first question yourself:
 
-Ask pairs to discuss:
-1. Which site looks healthiest? How do you know?
-2. What might be happening between Site A and Site B?
-3. If you were a mayfly larva, which site would you choose to live in?
+"Our river has a pH of [value]. Is that healthy for the fish and insects living there? Please explain in simple words."
 
-**AI assistant moment (optional)**: If using the AI assistant, model asking it a question together as a class:
+Read the AI's response aloud. Then ask pupils: "Does that match what you wrote on your worksheet? Does anything surprise you?"
 
-> *"We found a pH of 6.5 and nitrates of 24.3 mg/L at a river site near a town. What might this tell us about the health of the river? Please explain in a way that a 9-year-old would understand."*
+Now let pupils (in pairs or as a class) ask their own questions using the AI prompt cards provided. Encourage them to:
 
-Show pupils the response. Discuss: Does it make sense? Do we agree? What would we want to ask next?
+Ask follow-up questions if they don't understand
+Challenge the AI: "Are you sure? How do you know?"
+Make a note on their worksheet of the most useful thing the AI told them
 
----
+Key teaching point: Remind pupils that the AI is a tool, not an expert. It can be wrong. Their job is to think about whether its answers make sense.
 
-### Main activity 3 — River health scale (10 min)
 
-Pupils draw a simple river health scale on their worksheet — from 1 (critically ill) to 5 (thriving). They place each of the three sample sites on the scale and justify their choice in one sentence.
+5. Action output (10 minutes)
+Tell pupils: "Now you know what the data says. Someone needs to hear about it."
 
----
+Give them a choice of audience:
 
-### Plenary — Our question (5 min)
+A letter to the local council asking them to investigate
+A poster for the school entrance telling the community what they found
+A short speech to read at the next school assembly
 
-Ask each pair to write one question they would like to investigate about a real river:
+Pupils spend the remaining time beginning their chosen output. They do not need to finish it in class — completion can be homework or the next session.
 
-> *"We want to know whether…"*
+Minimum expectation: Every pupil writes at least one sentence that includes a real number from the data. "Our river's phosphate level is ___, which means ___."
 
-Collect these questions on sticky notes. These will feed into Lesson 2.
 
----
+6. Close (5 minutes)
+Ask three pupils to share one sentence from their output.
 
-## Differentiation
+Then ask the class: "Did using the AI help? What would you not trust it to tell you?"
 
-**Support**: Provide a glossary card with pH, nitrates, phosphates defined in simple language. Pair with a stronger reader for the data activity.
+Close with: "The people who collected this data are called citizen scientists. Today, you became one too."
 
-**Extension**: Ask pupils to look up what "invertebrate indicator species" are and why mayflies, stoneflies, and caddisflies are used as river health signals.
 
-**EAL**: Provide the river health scale as a visual spectrum (colours from red to green) rather than numbers.
+Differentiation
+For lower attainment:
+Pre-fill the data table on the worksheet. Provide sentence starters for the action output.
 
----
+For higher attainment:
+Ask them to compare two sets of readings (e.g., upstream vs. downstream, or summer vs. winter) and build a causal argument about what is entering the river and where.
 
-## Assessment opportunities
 
-- Worksheet 1 responses: can the pupil connect a reading to a real-world effect on wildlife?
-- River health scale justifications: is the reasoning based on evidence from the data?
-- Plenary question: does it reflect genuine curiosity about a specific variable?
+Assessment
+Formative: Observe pupil responses during the AI investigation. Are they questioning the AI's answers?
+Summative: Collect the action output. Does it include at least one real data point used correctly in a sentence?
 
----
 
-## Teacher notes
+After the lesson
+Collect all action outputs. Keep them — they are evidence of civic engagement for the project.
+Send the teacher feedback form (one page) to River AI Rangers via GitHub.
+If possible, share one piece of pupil work (anonymised) with your local river group. It will matter to them.
 
-### Using the AI assistant responsibly
 
-If this is pupils' first encounter with an AI assistant, take five minutes to discuss:
 
-- The AI does not know your river. It is answering from general knowledge.
-- It can get things wrong. We check its answers, just like we would check any source.
-- We are the scientists. The AI is our research assistant.
+River AI Rangers is open-source and free. All materials are available at github.com/Noelia-RG/river-ai-rangers
+Released under MIT licence — adapt freely.
 
-This framing — pupils as the experts, AI as the tool — is the most important thing to establish in this first lesson.
-
-### Connecting with a local river group
-
-If you have already made contact with a local river group (Riverfly Partnership, Wildlife Trust, Rivers Trust), ask if they can provide a short video message or visit for this lesson. Authentic data from a real local river dramatically increases pupil engagement.
-
----
-
-## Links and further reading
-
-- [OPAL Water Survey guide](https://opalexplorenature.org/watersurvey)
-- [Riverfly Partnership — why invertebrates matter](https://www.riverflies.org/riverfly-monitoring)
-- [Environment Agency — what's in your river?](https://environment.data.gov.uk/flood-monitoring/doc/reference)
-- [Freshwater Habitats Trust — pond and river resources for schools](https://freshwaterhabitats.org.uk)
