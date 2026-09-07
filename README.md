@@ -1,90 +1,79 @@
-# 🌊 River AI Rangers
+🌊 River AI Rangers
+Open-source AI and citizen science for secondary schools.
 
-**Open-source AI and citizen science for environmental literacy 
-in primary education.**
+River AI Rangers turns school science and geography lessons into live environmental investigations. Students work with real water-quality data from a local river, use an AI assistant to interpret what the numbers mean for ecosystems and human health, and produce genuine civic outputs — letters to councillors, community briefings, school assemblies — directed at real audiences.
 
----
+Built for secondary school teachers and environmental educators, so that any school near a river, a stream, or a wetland can turn water-quality data into meaningful science, genuine literacy, and real community action.
 
-## Why this exists
+No installation. No subscriptions. No data leaving the school.
 
-Water is the basis of all life. Every river that runs through 
-a town, a field, or a forest is part of a system that sustains 
-everything — the insects, the fish, the birds, the people 
-downstream. The same is true of our oceans.
 
-As an environmental scientist who has worked directly with river 
-monitoring groups, I have seen what happens when communities 
-lose their connection to the water beside them. They stop 
-noticing. They stop caring. And rivers suffer quietly.
+What's included
+📋 Full lesson plans (KS3/KS4 / ages 11–16)
+📝 Printable pupil worksheets
+💬 AI prompt card library for educators
+📊 Sample river water-quality data (CSV)
+🌊 Live AI assistant — river-ai-rangers.streamlit.app
 
-River AI Rangers started from a simple belief: if children 
-grow up understanding their local river — really understanding 
-it, through real data and real investigation — they become 
-adults who protect it.
 
-This toolkit puts open-source AI in the hands of primary school 
-teachers and environmental educators, so that any school near 
-a river, a stream, or a wetland can turn water-quality data 
-into meaningful science, genuine literacy, and real community 
-action.
+Who this is for
+Secondary school science and geography teachers (KS3/KS4)
+Environmental educators and river or ocean action groups
+Developers interested in open-source AI for education
+Anyone who believes water deserves better
 
-No cloud. No subscriptions. No data leaving the school.
-Just children, a river, and the tools to understand both.
 
----
+Principles
+Secondary-school first — lessons designed for ages 11–16, KS3/KS4 curriculum-aligned
+Action-oriented — every lesson ends with a real civic output for a real audience
+Critical AI literacy — students are explicitly taught to question and evaluate AI responses
+Open-source only — MIT licence, free to adapt and redeploy
+Place-based — anchored in the specific river nearest the school
 
-## What's included
 
-- 📖 Two full lesson plans (Years 3–6 / ages 7–11)
-- 📝 Printable pupil worksheets
-- 💬 AI prompt templates for educators
-- 📊 Sample river water-quality data (CSV)
+How it works
+The teacher uploads a CSV from the local river monitoring group
+The AI assistant reads the latest readings and is ready to answer questions in context
+Students investigate the data, question the AI, and form their own conclusions
+Every session ends with a civic output: a letter, a poster, a briefing, or a speech
 
----
 
-## Who this is for
+Live app
+👉 river-ai-rangers.streamlit.app
 
-- Primary school teachers (KS2 / Years 3–6)
-- Environmental educators and river or ocean action groups
-- Developers interested in open-source AI for education
-- Anyone who believes water deserves better
+Powered by Anthropic Claude · Runs in any browser · No installation required
 
----
+To run your own instance, add your ANTHROPIC_API_KEY to Streamlit Cloud App Settings → Secrets.
 
-## Principles
 
-- **Sovereign AI** — runs locally via Ollama, no cloud required
-- **Open-source only** — no API keys, no subscriptions, no cost
-- **Teacher-led** — AI is the tool, children are the scientists
-- **Action-oriented** — lessons end with pupils doing something 
-  real: letters, posters, assembly speeches
-- **Community-first** — built to grow with contributions from 
-  teachers, scientists, and developers worldwide
+Files
+File
+Description
+app.py
+Streamlit AI assistant (main app)
+requirements.txt
+Python dependencies
+sample_river_data.csv
+Example CSV from a river monitoring group
+lesson-plan-01.md
+Session 1 — Meet the River (60 min)
+worksheet-01.md
+Pupil worksheet for Session 1
+ai-prompt-library-01.md
+Prompt card sets A–E
 
----
 
-## Getting started
 
-Download the `lessons/` and `worksheets/` folders — no software 
-needed to use the lesson materials.
+About
+River AI Rangers was founded by Noelia Rufete Gil, researcher in AI, citizen science and environmental education.
 
-To run the local AI assistant:
+The programme was submitted to the Convene4Climate Global Awards 2026 in the Technology for Climate category.
 
-1. Install [Ollama](https://ollama.com/download) — free
-2. Run: `ollama pull mistral`
-3. Use the prompts in `prompts/prompt-templates.md`
+📧 rufetegilnoelia@gmail.com
 
----
 
-## Contributing
 
-Contributions from teachers, river scientists, translators, 
-and developers are very welcome. 
-See [CONTRIBUTING.md](CONTRIBUTING.md) to get involved.
+MIT licence — adapt, translate, and redeploy freely.
 
----
 
-## Created by
 
-[@Noelia-RG](https://github.com/Noelia-RG)  
-Environmental scientist and river educator
