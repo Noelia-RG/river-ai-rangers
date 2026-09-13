@@ -53,8 +53,8 @@ def build_system_prompt(river_name, ph, nitrates, phosphates, extra_columns=None
         for col, val in extra_columns.items():
             extra += f"- {col}: {val}\n"
 
-    return f"""You are a friendly river science assistant for the River AI Rangers project.
-You are helping children aged 7 to 11 investigate the health of their local river.
+    return f"""You are a river science assistant for the River AI Rangers project.
+You are helping secondary school students aged 11 to 16 investigate the health of their local river.
 
 TODAY'S RIVER READINGS for {river_name}:
 - pH: {ph}
@@ -62,33 +62,29 @@ TODAY'S RIVER READINGS for {river_name}:
 - Phosphates: {phosphates} mg/L{extra}
 
 YOUR ROLE:
-- Explain what these numbers mean for river life in simple, clear language
-- Help children understand where pollution comes from and what they can do about it
-- Encourage children to question your answers and think for themselves
+- Explain what these numbers mean for river life in clear, precise language
+- Help students understand where pollution comes from and what they can do about it
+- Encourage students to question your answers and think for themselves
 - Always connect your answer back to the real river readings above
 
 YOUR RULES:
-- Never use words a 7-year-old would not understand without explaining them first
+- Use language appropriate for secondary school students — clear and precise, not over-simplified
 - Never invent data or pretend to know things you don't know
-- If you are unsure, say so and suggest the child asks a real river scientist
-- Keep answers to 3–5 sentences. Children can ask follow-up questions.
-- Remind children you are a tool to help them think, not an expert who is always right
+- If you are unsure, say so and suggest the student consults a real river scientist
+- Keep answers to 3–5 sentences. Students can ask follow-up questions.
+- Remind students you are a tool to help them think, not an expert who is always right
 
 HEALTHY RANGES:
 - pH: 6.5 to 8.5 is healthy
 - Nitrates: below 10 mg/L is healthy
 - Phosphates: below 0.1 mg/L is healthy
 
-Remember: the child is the scientist. You are the tool."""
+Remember: the student is the scientist. You are the tool."""
 
 
 # ============================================================
 # CLAUDE API CALL
 # ============================================================
-# Claude's Messages API separates the system prompt from the
-# conversation history — we pass system separately, then the
-# user/assistant turns as the messages list.
-# Streaming returns server-sent events we parse line by line.
 
 def ask_claude(system_prompt, messages, api_key):
     headers = {
@@ -99,9 +95,9 @@ def ask_claude(system_prompt, messages, api_key):
     payload = {
         "model": MODEL,
         "system": system_prompt,
-        "messages": messages,       # list of {role, content} — no system role here
+        "messages": messages,
         "stream": True,
-        "max_tokens": 400,          # keeps answers child-length
+        "max_tokens": 400,
         "temperature": 0.5,
     }
     return requests.post(CLAUDE_API_URL, headers=headers, json=payload, stream=True, timeout=30)
@@ -110,10 +106,6 @@ def ask_claude(system_prompt, messages, api_key):
 # ============================================================
 # CSV LOADER
 # ============================================================
-# The river group exports their monitoring data as a CSV.
-# We expect at minimum: date, pH, nitrates, phosphates.
-# Any extra columns (temperature, dissolved oxygen, etc.)
-# are passed to the system prompt as additional readings.
 
 def load_csv(uploaded_file):
     try:
@@ -124,8 +116,6 @@ def load_csv(uploaded_file):
         return None, str(e)
 
 def get_latest_readings(df):
-    """Return the most recent row from the CSV as a dict."""
-    # Try to find a date column and sort by it
     date_cols = [c for c in df.columns if "date" in c]
     if date_cols:
         df = df.sort_values(date_cols[0], ascending=False)
@@ -133,7 +123,6 @@ def get_latest_readings(df):
     return latest
 
 def extract_reading(row, *possible_names):
-    """Try multiple column name variants to find a value."""
     for name in possible_names:
         for col in row:
             if name in col.lower():
@@ -154,7 +143,6 @@ with st.sidebar:
     st.caption("Powered by Anthropic Claude · Open-source · Free to use")
     st.divider()
 
-    # --- CSV Upload ---
     st.subheader("📂 Upload River Data")
     st.caption("Upload a CSV from your river group. Needs columns for pH, nitrates, phosphates.")
 
@@ -173,12 +161,10 @@ with st.sidebar:
 
             latest = get_latest_readings(df)
 
-            # Pull standard readings from CSV
-            csv_ph        = extract_reading(latest, "ph")
-            csv_nitrates  = extract_reading(latest, "nitrate")
+            csv_ph         = extract_reading(latest, "ph")
+            csv_nitrates   = extract_reading(latest, "nitrate")
             csv_phosphates = extract_reading(latest, "phosphate")
 
-            # Anything else goes into extra_columns for the system prompt
             standard_keys = {"ph", "nitrate", "phosphate", "date", "site", "river", "location"}
             for col, val in latest.items():
                 if not any(k in col for k in standard_keys):
@@ -190,7 +176,6 @@ with st.sidebar:
 
     st.divider()
 
-    # --- Manual entry (fallback or override) ---
     st.subheader("📊 River Readings")
     st.caption("Pre-filled from CSV if uploaded. Edit to override.")
 
@@ -205,7 +190,6 @@ with st.sidebar:
                                   value=float(csv_phosphates) if csv_phosphates else 0.08, step=0.01,
                                   help="Healthy: below 0.1 mg/L")
 
-    # Quick health check
     st.divider()
     st.subheader("🩺 Health Check")
     st.write(f"pH {ph}: {'✅ Healthy' if 6.5 <= ph <= 8.5 else '⚠️ Outside range'}")
@@ -233,7 +217,6 @@ st.markdown(
 )
 st.divider()
 
-# --- Prompt cards ---
 st.subheader("💬 Ask a question")
 st.caption("Click a card to get started, or type your own question below.")
 
@@ -245,7 +228,7 @@ if "prefill" not in st.session_state:
 with col1:
     st.markdown("**🔵 The numbers**")
     if st.button(f"Is pH {ph} healthy?", use_container_width=True):
-        st.session_state.prefill = f"Our river has a pH of {ph}. Is that healthy for the fish and insects living there? Please explain in simple words."
+        st.session_state.prefill = f"Our river has a pH of {ph}. Is that healthy for the fish and invertebrates living there? Please explain clearly."
     if st.button(f"Nitrates at {nitrates} mg/L?", use_container_width=True):
         st.session_state.prefill = f"Our river's nitrate level is {nitrates} mg/L. What does that mean for the river? Is it safe?"
     if st.button(f"Phosphates at {phosphates}?", use_container_width=True):
@@ -297,12 +280,10 @@ st.divider()
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display history
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Input
 user_input = st.chat_input("Ask a question about our river...")
 
 if st.session_state.prefill and not user_input:
@@ -324,8 +305,6 @@ if user_input:
     with st.chat_message("user"):
         st.markdown(user_input)
 
-    # Claude API: system prompt is separate from messages.
-    # Messages list contains only user/assistant turns.
     system_prompt = build_system_prompt(river_name, ph, nitrates, phosphates, extra_columns)
 
     with st.chat_message("assistant"):
@@ -335,9 +314,6 @@ if user_input:
         try:
             response = ask_claude(system_prompt, st.session_state.messages, api_key)
 
-            # Claude streams server-sent events in this format:
-            # event: content_block_delta
-            # data: {"type": "content_block_delta", "delta": {"text": "..."}}
             for line in response.iter_lines():
                 if line:
                     line = line.decode("utf-8")
