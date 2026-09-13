@@ -1,79 +1,21 @@
-# Prompt Templates for Educators
-This library of ready-to-use prompts is designed for secondary school teachers using the River AI Rangers toolkit. Copy, paste, and adapt them freely.
-All prompts are tested with the **River AI Rangers assistant at [river-ai-rangers.streamlit.app](https://river-ai-rangers.streamlit.app)** (powered by Anthropic Claude — no installation required).
+MIT License
 
----
+Copyright (c) 2026 Noelia Rufete Gil
 
-## How to use these prompts
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-A good prompt has three parts:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-1. **Context** — what the data is and where it came from
-2. **Question** — what you want to know
-3. **Audience instruction** — who the answer is for
-
-The templates below are ready to use. Replace `[BRACKETS]` with your actual values.
-
----
-
-## 🔬 Template 1 — Interpreting a single reading
-
-Use when: a student has one water-quality result and wants to know what it means.
-
-**Example with values filled in:**
-
-> We measured the nitrate level at a river site downstream from farmland. The reading was 22 mg/L. Please explain whether this is a healthy or unhealthy level, what it might mean for the fish and invertebrates that live in the river, and what might be causing this reading. Please use clear, precise language suitable for a secondary school student.
-
----
-
-## 📊 Template 2 — Comparing two or more sites
-
-Use when: students are comparing upstream vs downstream, or seasonal changes.
-
----
-
-## 🦟 Template 3 — What animals can survive here?
-
-Use when: students want to connect water-quality data to real wildlife.
-
----
-
-## ✉️ Template 4 — Helping with a letter to a decision-maker
-
-Use when: students are drafting letters to councillors, MPs, or water companies.
-
----
-
-## 🌿 Template 5 — Action ideas
-
-Use when: students want to do something but are not sure what.
-
----
-
-## 🤔 Template 6 — Critical thinking check
-
-Use when: you want students to evaluate an AI answer they have already received.
-
-This is one of the most important prompts in the toolkit. It models critical evaluation of AI output and builds AI literacy directly.
-
----
-
-## 🌍 Template 7 — Connecting to global rivers
-
-Use when: 
----
-
-## Tips for classroom use
-
-**Prompt as a class first.** Before giving students free access to the AI, run a prompt together on the board. Model how to read the response critically.
-
-**Save interesting responses.** If the AI says something surprising or that students want to investigate further, copy it. It becomes a research starting point.
-
-**Name the limitations.** The AI does not know your specific river. It is answering from general scientific knowledge. This is a feature, not a bug — it teaches students to combine general knowledge with their own local evidence.
-
-**Prompt revision is a writing skill.** Getting students to rewrite a weak prompt into a strong one is excellent English and AI literacy practice.
-
----
-
-*River AI Rangers — free to use and adapt — github.com/Noelia-RG/river-ai-rangers — MIT licence*you want to broaden the lesson beyond the local river.
-
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
