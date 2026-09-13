@@ -1,65 +1,83 @@
 # 🌊 River AI Rangers — App Setup
 
-## What you need
+## No installation needed
 
-- Python 3.10 or above
-- [Ollama](https://ollama.com/download) installed and running
+The River AI Rangers assistant runs in any browser at:
 
----
+👉 **[river-ai-rangers.streamlit.app](https://river-ai-rangers.streamlit.app)**
 
-## Step 1 — Install Ollama and pull a model
-
-Download Ollama from https://ollama.com/download then run:
-
-```bash
-ollama pull mistral
-```
+No Python, no Ollama, no downloads required. Open the link and start investigating.
 
 ---
 
-## Step 2 — Install Python dependencies
+## Want to run your own instance?
 
-```bash
-pip install -r requirements.txt
-```
+If you want to host your own version (for your school, trust, or river group), follow the steps below.
+
+### What you need
+
+- A free [GitHub](https://github.com) account
+- A free [Streamlit Community Cloud](https://share.streamlit.io) account
+- An [Anthropic API key](https://console.anthropic.com) (free tier available)
 
 ---
 
-## Step 3 — Run the app
+## Step 1 — Fork the repository
 
-```bash
-streamlit run app.py
+Go to **https://github.com/Noelia-RG/river-ai-rangers** and click **Fork** to copy it to your own GitHub account.
+
+---
+
+## Step 2 — Deploy on Streamlit Community Cloud
+
+1. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub
+2. Click **Deploy an app**
+3. Select your forked repository and set the main file to `app.py`
+4. Click **Deploy**
+
+---
+
+## Step 3 — Add your API key
+
+1. In Streamlit Cloud, open your app's **Settings → Secrets**
+2. Add the following:
+
+```toml
+ANTHROPIC_API_KEY = "your-key-here"
 ```
 
-The app will open automatically in your browser at http://localhost:8501
+3. Save — the app will restart automatically
+
+Your API key is stored securely in Streamlit Cloud and never appears in the code or on GitHub.
 
 ---
 
 ## Using your own river data
 
-Upload a CSV file with these columns:
+Upload a CSV file via the sidebar. The app accepts any CSV with columns for pH, nitrates, and phosphates. Column names are flexible — the app recognises common variants automatically.
+
+A sample file is available in the repository: `sample_river_data.csv`
 
 | Column | Example |
-|---|---|
-| site_name | Upstream woodland |
-| pH | 7.2 |
-| nitrates_mg_per_L | 2.1 |
-| phosphates_mg_per_L | 0.04 |
+|--------|---------|
+| date | 2026-07-15 |
+| site | Upstream bridge |
+| ph | 7.4 |
+| nitrates_mg_l | 4.2 |
+| phosphates_mg_l | 0.06 |
 
-A sample file is available in `../data/sample-readings.csv`
+Extra columns (temperature, dissolved oxygen, turbidity) are automatically passed to the AI as additional context.
 
 ---
 
-## Troubleshooting
+## Cost
 
-**"Can't connect to Ollama"** — Make sure Ollama is running:
-```bash
-ollama serve
-```
+The app uses Anthropic Claude Haiku — approximately **£0.01 per full lesson session**. A typical school pilot costs less than £1 per term.
 
-**Slow responses** — Mistral works well on most laptops. 
-If it's too slow, try `phi3` which is lighter:
-```bash
-ollama pull phi3
-```
-Then select phi3 in the app sidebar.
+---
+
+## Licence
+
+MIT — fork, adapt, and redeploy freely. If you build something useful, share it back.
+
+*River AI Rangers — github.com/Noelia-RG/river-ai-rangers*
