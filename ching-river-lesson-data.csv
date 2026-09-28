@@ -1,0 +1,13 @@
+site,river,season,sample_year,phosphates_mg_l,ammonia_mg_l,water_temp_c,readings_averaged,notes
+Site A — Upstream (Epping Forest),"The Ching, North London",Winter,2024-2025,0.11,0.37,10.2,13,Thames21 Lea Guardians citizen science data. Phosphate healthy range: <0.1 mg/L. Ammonia healthy range: <0.5 mg/L.
+Site B — Town edge (Waltham Forest),"The Ching, North London",Winter,2024-2025,0.84,0.17,7.7,18,Thames21 Lea Guardians citizen science data. Phosphate healthy range: <0.1 mg/L. Ammonia healthy range: <0.5 mg/L.
+Site C — Lower Ching (downstream),"The Ching, North London",Winter,2024-2025,0.96,0.15,,14,Thames21 Lea Guardians citizen science data. Phosphate healthy range: <0.1 mg/L. Ammonia healthy range: <0.5 mg/L.
+Site A — Upstream (Epping Forest),"The Ching, North London",Spring,2024-2025,0.13,0.38,,9,Thames21 Lea Guardians citizen science data. Phosphate healthy range: <0.1 mg/L. Ammonia healthy range: <0.5 mg/L.
+Site B — Town edge (Waltham Forest),"The Ching, North London",Spring,2024-2025,1.59,0.26,11.8,14,Thames21 Lea Guardians citizen science data. Phosphate healthy range: <0.1 mg/L. Ammonia healthy range: <0.5 mg/L.
+Site C — Lower Ching (downstream),"The Ching, North London",Spring,2024-2025,1.87,0.28,,13,Thames21 Lea Guardians citizen science data. Phosphate healthy range: <0.1 mg/L. Ammonia healthy range: <0.5 mg/L.
+Site A — Upstream (Epping Forest),"The Ching, North London",Summer,2024-2025,0.02,0.26,,10,Thames21 Lea Guardians citizen science data. Phosphate healthy range: <0.1 mg/L. Ammonia healthy range: <0.5 mg/L.
+Site B — Town edge (Waltham Forest),"The Ching, North London",Summer,2024-2025,2.14,0.17,18.2,23,Thames21 Lea Guardians citizen science data. Phosphate healthy range: <0.1 mg/L. Ammonia healthy range: <0.5 mg/L.
+Site C — Lower Ching (downstream),"The Ching, North London",Summer,2024-2025,2.35,0.5,,16,Thames21 Lea Guardians citizen science data. Phosphate healthy range: <0.1 mg/L. Ammonia healthy range: <0.5 mg/L.
+Site A — Upstream (Epping Forest),"The Ching, North London",Autumn,2024-2025,0.04,0.25,12.2,6,Thames21 Lea Guardians citizen science data. Phosphate healthy range: <0.1 mg/L. Ammonia healthy range: <0.5 mg/L.
+Site B — Town edge (Waltham Forest),"The Ching, North London",Autumn,2024-2025,1.69,0.16,12.9,23,Thames21 Lea Guardians citizen science data. Phosphate healthy range: <0.1 mg/L. Ammonia healthy range: <0.5 mg/L.
+Site C — Lower Ching (downstream),"The Ching, North London",Autumn,2024-2025,1.8,0.33,16.2,23,Thames21 Lea Guardians citizen science data. Phosphate healthy range: <0.1 mg/L. Ammonia healthy range: <0.5 mg/L.
