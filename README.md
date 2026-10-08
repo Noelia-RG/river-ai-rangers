@@ -6,7 +6,7 @@ River AI Rangers turns school science and geography lessons into live environmen
 
 Built for secondary school teachers and environmental educators, so that any school near a river, a stream, or a wetland can turn water-quality data into meaningful science, genuine literacy, and real community action.
 
-**No installation. No subscriptions. No data leaving the school.**
+**No installation. No subscriptions. Free to use.**
 
 ---
 
@@ -58,6 +58,14 @@ To run your own instance, add your `ANTHROPIC_API_KEY` to Streamlit Cloud App Se
 
 ---
 
+## Data & privacy
+
+Student questions and river data are processed by **Anthropic's Claude API** to generate AI responses. No personally identifiable information should be entered into the chat. River water-quality data is processed transiently to answer each question and is not stored by this application beyond the user's browser session.
+
+Schools deploying this app for students should satisfy themselves that its use is consistent with their own data processing policies. For data processing details, see [Anthropic's privacy policy](https://www.anthropic.com/legal/privacy).
+
+---
+
 ## Files
 
 | File | Description |
@@ -68,10 +76,6 @@ To run your own instance, add your `ANTHROPIC_API_KEY` to Streamlit Cloud App Se
 | `lesson-plan-01.md` | Session 1 — Meet the River (60 min) |
 | `worksheet-01.md` | Pupil worksheet for Session 1 |
 | `ai-prompt-library-01.md` | Prompt card sets A–E |
-| `lesson-02-follow-the-pollution.md` | Session 2 — Follow the Pollution (60 min) |
-| `worksheet-02-follow-the-pollution.md` | Pupil worksheet for Session 2 |
-| `prompt-templates.md` | Educator prompt templates |
-| `SETUP.md` | Setup and deployment guide |
 
 ---
 
