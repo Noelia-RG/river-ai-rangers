@@ -496,21 +496,35 @@ if user_input:
         try:
             response = ask_claude(system_prompt, st.session_state.messages, api_key)
 
-            for line in response.iter_lines():
-                if line:
-                    line = line.decode("utf-8")
-                    if line.startswith("data: "):
-                        data = line[6:]
-                        try:
-                            chunk = json.loads(data)
-                            if chunk.get("type") == "content_block_delta":
-                                text = chunk.get("delta", {}).get("text", "")
-                                full_response += text
-                                placeholder.markdown(full_response + "▌")
-                        except json.JSONDecodeError:
-                            pass
+            # Surface API errors immediately (e.g. invalid model, bad API key)
+            if response.status_code != 200:
+                try:
+                    err = response.json()
+                    msg = err.get("error", {}).get("message", response.text[:200])
+                except Exception:
+                    msg = response.text[:200]
+                full_response = f"⚠️ API error ({response.status_code}): {msg}"
+                placeholder.error(full_response)
+            else:
+                for line in response.iter_lines():
+                    if line:
+                        line = line.decode("utf-8")
+                        if line.startswith("data: "):
+                            data = line[6:]
+                            try:
+                                chunk = json.loads(data)
+                                if chunk.get("type") == "content_block_delta":
+                                    text = chunk.get("delta", {}).get("text", "")
+                                    full_response += text
+                                    placeholder.markdown(full_response + "▌")
+                            except json.JSONDecodeError:
+                                pass
 
-            placeholder.markdown(full_response)
+                if not full_response:
+                    full_response = "⚠️ No response received. Please try again."
+                    placeholder.warning(full_response)
+                else:
+                    placeholder.markdown(full_response)
 
         except requests.exceptions.Timeout:
             full_response = "⚠️ The request timed out. Please try again."
