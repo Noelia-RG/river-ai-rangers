@@ -1,183 +1,285 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>River AI Rangers</title>
-  <meta name="description" content="Open-source AI and citizen science for secondary school environmental education. Free lesson plans, worksheets and a live AI assistant.">
-  <link rel="canonical" href="https://noelia-rg.github.io/river-ai-rangers/" />
-  <meta property="og:title" content="River AI Rangers" />
-  <meta property="og:description" content="Open-source AI and citizen science for secondary schools. Real river data, free lesson plans, and a live Claude-powered AI assistant." />
-  <meta property="og:url" content="https://noelia-rg.github.io/river-ai-rangers/" />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="River AI Rangers" />
-  <meta name="twitter:description" content="Open-source AI and citizen science for secondary schools. Real river data, free lesson plans, and a live Claude-powered AI assistant." />
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1a1a1a; background: #ffffff; }
-    .hero { background: #0F6E56; padding: 80px 40px 64px; text-align: center; }
-    .hero-wave { font-size: 48px; margin-bottom: 16px; }
-    .hero h1 { font-size: 36px; font-weight: 500; color: #E1F5EE; margin-bottom: 12px; }
-    .hero p { font-size: 18px; color: #9FE1CB; max-width: 600px; margin: 0 auto 32px; line-height: 1.6; }
-    .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    .btn-primary { background: #E1F5EE; color: #0F6E56; border: none; padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-block; }
-    .btn-primary:hover { background: #ffffff; }
-    .btn-secondary { background: transparent; color: #E1F5EE; border: 1.5px solid #5DCAA5; padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-block; }
-    .btn-secondary:hover { background: #085041; }
-    .badge { display: inline-block; background: #085041; color: #9FE1CB; font-size: 13px; padding: 4px 12px; border-radius: 20px; margin-bottom: 20px; }
-    .section { padding: 64px 40px; max-width: 860px; margin: 0 auto; }
-    .section-title { font-size: 24px; font-weight: 500; color: #1a1a1a; margin-bottom: 8px; }
-    .section-sub { font-size: 16px; color: #555555; margin-bottom: 40px; line-height: 1.6; }
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-    .card { background: #f9f9f9; border: 0.5px solid #e0e0e0; border-radius: 12px; padding: 20px; }
-    .card-icon { font-size: 28px; margin-bottom: 12px; }
-    .card h3 { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
-    .card p { font-size: 13px; color: #555555; line-height: 1.5; }
-    .how { background: #f5f5f5; padding: 64px 40px; }
-    .how-inner { max-width: 860px; margin: 0 auto; }
-    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px; margin-top: 40px; }
-    .step { text-align: center; }
-    .step-num { width: 40px; height: 40px; border-radius: 50%; background: #E1F5EE; color: #0F6E56; font-size: 16px; font-weight: 500; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
-    .step h3 { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
-    .step p { font-size: 13px; color: #555555; line-height: 1.5; }
-    .divider { border: none; border-top: 0.5px solid #e0e0e0; margin: 0; }
-    .lessons { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-    .lesson-card { background: #f9f9f9; border: 0.5px solid #e0e0e0; border-radius: 12px; padding: 20px; }
-    .lesson-tag { display: inline-block; background: #E1F5EE; color: #0F6E56; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
-    .lesson-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
-    .lesson-card p { font-size: 13px; color: #555555; line-height: 1.5; }
-    .cta { background: #0F6E56; padding: 64px 40px; text-align: center; }
-    .cta h2 { font-size: 26px; font-weight: 500; color: #E1F5EE; margin-bottom: 12px; }
-    .cta p { font-size: 16px; color: #9FE1CB; max-width: 500px; margin: 0 auto 32px; }
-    .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    .footer { padding: 32px 40px; text-align: center; background: #ffffff; }
-    .footer p { font-size: 13px; color: #888888; margin-bottom: 8px; }
-    .footer a { color: #0F6E56; text-decoration: none; }
-    @media (max-width: 600px) {
-      .hero { padding: 48px 24px 40px; }
-      .hero h1 { font-size: 28px; }
-      .section { padding: 48px 24px; }
-      .how { padding: 48px 24px; }
-      .cta { padding: 48px 24px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>River AI Rangers</title>
+<style>
+:root {
+  color-scheme: light;
+  --teal: #0d9488;
+  --teal-dark: #0f766e;
+  --teal-light: #ccfbf1;
+  --blue: #0ea5e9;
+  --blue-dark: #0284c7;
+  --green: #16a34a;
+  --amber: #d97706;
+  --red: #dc2626;
+  --ink: #0f172a;
+  --muted: #475569;
+  --border: #e2e8f0;
+  --surface: #f8fafc;
+  --white: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--ink); background: var(--white); line-height: 1.6; }
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.95); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+.nav-logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 1.1rem; color: var(--teal-dark); text-decoration: none; }
+.nav-links { display: flex; align-items: center; gap: 1.5rem; }
+.nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+.nav-links a:hover { color: var(--teal); }
+.nav-cta { background: var(--teal); color: white !important; padding: 0.45rem 1.1rem; border-radius: 6px; font-weight: 600; }
+.nav-cta:hover { background: var(--teal-dark) !important; }
+.hero {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #0f172a 0%, #134e4a 50%, #0c4a6e 100%);
+  color: white; padding: 5rem 2rem 4rem; text-align: center;
+}
+.hero-waves { position: absolute; bottom: 0; left: 0; right: 0; height: 120px; pointer-events: none; }
+.hero-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 0.3rem 0.9rem; font-size: 0.8rem; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 800; line-height: 1.15; margin-bottom: 1.2rem; }
+.hero h1 span { color: #5eead4; }
+.hero p { font-size: 1.15rem; color: rgba(255,255,255,0.8); max-width: 600px; margin: 0 auto 2.5rem; }
+.hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; z-index: 2; margin-bottom: 3rem; }
+.btn-primary { background: #5eead4; color: #0f172a; font-weight: 700; padding: 0.8rem 1.8rem; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s; font-size: 1rem; }
+.btn-primary:hover { background: white; transform: translateY(-1px); }
+.btn-ghost { background: transparent; color: white; font-weight: 600; padding: 0.8rem 1.8rem; border-radius: 8px; text-decoration: none; border: 2px solid rgba(255,255,255,0.5); display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s; font-size: 1rem; }
+.btn-ghost:hover { border-color: white; background: rgba(255,255,255,0.1); }
+.hero-stats { display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap; position: relative; z-index: 2; }
+.stat { text-align: center; }
+.stat-num { font-size: 1.8rem; font-weight: 800; color: #5eead4; }
+.stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.65); margin-top: 0.1rem; }
+section { padding: 4rem 2rem; }
+.container { max-width: 1100px; margin: 0 auto; }
+.section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); margin-bottom: 0.6rem; }
+.section-title { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; color: var(--ink); margin-bottom: 0.8rem; }
+.section-sub { font-size: 1.05rem; color: var(--muted); max-width: 560px; }
+.what { background: var(--surface); }
+.what-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-top: 3rem; }
+.what-visual { background: linear-gradient(135deg, #134e4a, #0c4a6e); border-radius: 16px; padding: 2rem; color: white; min-height: 280px; display: flex; flex-direction: column; justify-content: center; }
+.chat-bubble { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 0.8rem 1rem; margin-bottom: 0.75rem; font-size: 0.875rem; line-height: 1.5; }
+.chat-bubble.user { background: #5eead4; color: #0f172a; margin-left: 2rem; }
+.chat-bubble.ai { margin-right: 2rem; }
+.chat-label { font-size: 0.7rem; font-weight: 600; opacity: 0.7; margin-bottom: 0.25rem; }
+.what-points { display: flex; flex-direction: column; gap: 1.2rem; }
+.point { display: flex; gap: 1rem; align-items: flex-start; }
+.point-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+.point-icon.teal { background: var(--teal-light); }
+.point-icon.blue { background: #e0f2fe; }
+.point-icon.green { background: #dcfce7; }
+.point h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.2rem; }
+.point p { font-size: 0.9rem; color: var(--muted); }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; }
+.step { text-align: center; padding: 2rem 1.5rem; background: white; border-radius: 16px; border: 1px solid var(--border); position: relative; transition: box-shadow 0.2s; }
+.step:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+.step-num { width: 48px; height: 48px; background: var(--teal); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; margin: 0 auto 1rem; }
+.step-connector { position: absolute; top: 40px; right: -1.25rem; width: 2.5rem; height: 2px; background: var(--border); z-index: 1; }
+.step:last-child .step-connector { display: none; }
+.step-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+.step h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+.step p { font-size: 0.875rem; color: var(--muted); }
+.features-bg { background: linear-gradient(180deg, #f8fafc 0%, white 100%); }
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+.feature-card { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; transition: all 0.2s; }
+.feature-card:hover { border-color: var(--teal); box-shadow: 0 4px 20px rgba(13,148,136,0.1); }
+.feature-icon { font-size: 1.8rem; margin-bottom: 0.8rem; }
+.feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+.feature-card p { font-size: 0.875rem; color: var(--muted); }
+.data-section { background: var(--ink); color: white; }
+.data-section .section-title { color: white; }
+.data-section .section-sub { color: rgba(255,255,255,0.65); }
+.dataset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+.dataset-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 1.5rem; transition: all 0.2s; }
+.dataset-card:hover { background: rgba(255,255,255,0.11); }
+.dataset-tag { display: inline-flex; align-items: center; gap: 0.35rem; background: rgba(94,234,212,0.2); color: #5eead4; border-radius: 20px; padding: 0.2rem 0.7rem; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.75rem; }
+.dataset-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; color: white; }
+.dataset-card p { font-size: 0.85rem; color: rgba(255,255,255,0.6); }
+.dataset-meta { margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+.meta-chip { background: rgba(255,255,255,0.1); border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.75rem; color: rgba(255,255,255,0.7); }
+.teachers { background: white; }
+.teachers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-top: 3rem; }
+.curriculum-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+.tag { padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+.tag.geo { background: #dbeafe; color: #1d4ed8; }
+.tag.sci { background: #dcfce7; color: #166534; }
+.tag.stem { background: #fef9c3; color: #854d0e; }
+.tag.ict { background: #fce7f3; color: #9d174d; }
+.checklist { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; }
+.checklist li { display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.95rem; }
+.check { color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 0.1rem; }
+.teacher-card { background: linear-gradient(135deg, var(--teal-light), #e0f2fe); border-radius: 16px; padding: 2.5rem; }
+.teacher-card h3 { font-size: 1.3rem; font-weight: 800; color: var(--teal-dark); margin-bottom: 1rem; }
+.teacher-card p { font-size: 0.9rem; color: #0f766e; margin-bottom: 1.5rem; }
+.teacher-card .btn-teal { background: var(--teal); color: white; padding: 0.7rem 1.4rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; display: inline-block; transition: background 0.2s; }
+.teacher-card .btn-teal:hover { background: var(--teal-dark); }
+.cta-section { background: linear-gradient(135deg, #134e4a, #0c4a6e); text-align: center; padding: 5rem 2rem; color: white; }
+.cta-section h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 1rem; }
+.cta-section p { font-size: 1.1rem; color: rgba(255,255,255,0.75); max-width: 500px; margin: 0 auto 2.5rem; }
+footer { background: var(--ink); color: rgba(255,255,255,0.55); padding: 2.5rem 2rem; font-size: 0.85rem; }
+.footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.footer-logo { color: #5eead4; font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 0.4rem; }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a { color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: #5eead4; }
+.footer-note { text-align: right; line-height: 1.5; }
+@media (max-width: 768px) {
+  .what-grid, .teachers-grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; }
+  .step-connector { display: none; }
+  nav .nav-links { display: none; }
+  .footer-inner { flex-direction: column; text-align: center; }
+  .footer-note { text-align: center; }
+}
+</style>
 </head>
 <body>
-
-<div class="hero">
-  <div class="hero-wave">🌊</div>
-  <div class="badge">Open-source · Free · KS3/KS4</div>
-  <h1>River AI Rangers</h1>
-  <p>Secondary school students investigate their local river using real water-quality data and an AI assistant — then take civic action on what they find.</p>
-  <div class="hero-buttons">
-    <a class="btn-primary" href="https://river-ai-rangers.streamlit.app" target="_blank">Try the live app</a>
-    <a class="btn-secondary" href="mailto:rufetegilnoelia@gmail.com">Partner with us</a>
+<nav>
+  <a href="#" class="nav-logo">🌊 River AI Rangers</a>
+  <div class="nav-links">
+    <a href="#how-it-works">How it works</a>
+    <a href="#data">Data</a>
+    <a href="#teachers">For teachers</a>
+    <a href="https://github.com/Noelia-RG/river-ai-rangers" target="_blank">GitHub</a>
+    <a href="https://river-ai-rangers.streamlit.app" target="_blank" class="nav-cta">Launch app →</a>
   </div>
-</div>
-
-<div class="section">
-  <div class="section-title">What is River AI Rangers?</div>
-  <div class="section-sub">A free, open-source programme that turns science and geography lessons into live environmental investigations. No installation. No subscriptions. Free to use.</div>
-  <div class="cards">
-    <div class="card">
-      <div class="card-icon">📊</div>
-      <h3>Real data</h3>
-      <p>Students work with actual water-quality readings from their local river group — pH, nitrates, phosphates, and more.</p>
+</nav>
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">🎓 Free for secondary schools · Open source</div>
+    <h1>Real rivers.<br><span>Real data.</span><br>Real science.</h1>
+    <p>River AI Rangers gives secondary school students an AI-powered tool to investigate real water-quality data from local rivers — and ask the questions that matter.</p>
+    <div class="hero-btns">
+      <a href="https://river-ai-rangers.streamlit.app" target="_blank" class="btn-primary">🌊 Launch the app</a>
+      <a href="https://github.com/Noelia-RG/river-ai-rangers" target="_blank" class="btn-ghost">⭐ View on GitHub</a>
     </div>
-    <div class="card">
-      <div class="card-icon">🤖</div>
-      <h3>AI investigation</h3>
-      <p>A purpose-built AI assistant helps students interpret the data and question its answers — building critical AI literacy.</p>
-    </div>
-    <div class="card">
-      <div class="card-icon">✉️</div>
-      <h3>Civic action</h3>
-      <p>Every lesson ends with a real output — a letter, a briefing, a poster — directed at a real audience.</p>
-    </div>
-    <div class="card">
-      <div class="card-icon">🔓</div>
-      <h3>Fully free</h3>
-      <p>MIT licence. All materials are open-source. Schools can adapt and redeploy everything at no cost.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Real river datasets</div></div>
+      <div class="stat"><div class="stat-num">Free</div><div class="stat-label">For all schools</div></div>
+      <div class="stat"><div class="stat-num">KS3–4</div><div class="stat-label">Ages 11–16</div></div>
+      <div class="stat"><div class="stat-num">Open</div><div class="stat-label">Source &amp; data</div></div>
     </div>
   </div>
-</div>
-
-<hr class="divider">
-
-<div class="how">
-  <div class="how-inner">
-    <div class="section-title">How it works</div>
-    <div class="section-sub">Four steps, one browser, zero installation.</div>
+  <svg class="hero-waves" viewBox="0 0 1800 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#f8fafc" d="M0,60 C200,100 400,20 600,60 C800,100 1000,20 1200,60 C1400,100 1600,20 1800,60 L1800,120 L0,120 Z"/>
+    <path fill="#e7faf7" opacity="0.6" d="M0,80 C200,20 400,100 600,80 C800,20 1000,100 1200,80 C1400,20 1600,100 1800,80 L1800,120 L0,120 Z"/>
+  </svg>
+</section>
+<section class="what">
+  <div class="container">
+    <div class="section-label">What is it?</div>
+    <h2 class="section-title">Citizen science meets AI</h2>
+    <p class="section-sub">A free Streamlit app that puts real Thames21 river data in students’ hands — with an AI tutor built in to help them interpret it.</p>
+    <div class="what-grid">
+      <div class="what-visual">
+        <div class="chat-bubble user"><div class="chat-label">Student</div>Why is the phosphate level so high at Site 3?</div>
+        <div class="chat-bubble ai"><div class="chat-label">AI Ranger</div>Looking at the data, Site 3 shows 0.42 mg/L — that’s four times the healthy limit of 0.1 mg/L. This often points to agricultural run-off or a nearby sewage overflow. What land use is upstream of that site?</div>
+        <div class="chat-bubble user"><div class="chat-label">Student</div>There are farms. So is that illegal?</div>
+        <div class="chat-bubble ai"><div class="chat-label">AI Ranger</div>Great question — and one worth checking. The Environment Agency sets legal limits, but enforcement is patchy. Here’s how to find out who’s responsible…</div>
+      </div>
+      <div class="what-points">
+        <div class="point"><div class="point-icon teal">📊</div><div><h3>Load real data in seconds</h3><p>Choose from preloaded Thames21 and Lea Guardians datasets, or upload your own CSV from any river monitoring programme.</p></div></div>
+        <div class="point"><div class="point-icon blue">🤖</div><div><h3>Ask questions in plain English</h3><p>The AI reads the actual dataset and answers questions about it — citing real numbers, not generic facts. Students can push back and question the AI too.</p></div></div>
+        <div class="point"><div class="point-icon green">🔬</div><div><h3>Think like a river scientist</h3><p>Compare sites, spot pollution patterns, write letters to the Environment Agency. The AI helps students find the right questions — not just the answers.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="how-it-works">
+  <div class="container">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">Up and running in three steps</h2>
+    <p class="section-sub">No setup. No accounts. No data leaving the classroom without your knowledge.</p>
     <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <h3>Upload river data</h3>
-        <p>Teacher uploads a CSV from the local river monitoring group.</p>
+      <div class="step"><div class="step-num">1</div><div class="step-connector"></div><div class="step-icon">📂</div><h3>Load a dataset</h3><p>Choose a preloaded Thames21 river dataset or upload your own CSV. The app reads the columns and prepares the AI automatically.</p></div>
+      <div class="step"><div class="step-num">2</div><div class="step-connector"></div><div class="step-icon">💬</div><h3>Ask questions</h3><p>Type a question or click a prompt card. The AI responds based on the real data in front of it — phosphates, ammonia, pH, dissolved oxygen.</p></div>
+      <div class="step"><div class="step-num">3</div><div class="step-icon">🔍</div><h3>Investigate &amp; question</h3><p>Push back, dig deeper, compare sites across seasons, and use the data to take action — write a report, a letter, or a class presentation.</p></div>
+    </div>
+  </div>
+</section>
+<section class="features-bg">
+  <div class="container">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Built for the classroom</h2>
+    <div class="feature-grid">
+      <div class="feature-card"><div class="feature-icon">🆓</div><h3>Completely free</h3><p>No subscription, no per-student licence, no hidden cost. The app is open-source and free to use for any school.</p></div>
+      <div class="feature-card"><div class="feature-icon">🔒</div><h3>Safe by design</h3><p>The AI is instructed to redirect off-topic questions, never discuss personal topics, and remind students it can make mistakes.</p></div>
+      <div class="feature-card"><div class="feature-icon">📈</div><h3>Health panel</h3><p>Instant visual summary of average and peak readings for pH, phosphates, ammonia, nitrates and dissolved oxygen — with healthy-range flags.</p></div>
+      <div class="feature-card"><div class="feature-icon">📤</div><h3>Upload your own data</h3><p>If your school has conducted its own river monitoring, upload the CSV and the AI analyses your data — up to 5 MB.</p></div>
+      <div class="feature-card"><div class="feature-icon">🃏</div><h3>Prompt cards</h3><p>20 ready-made question starters across five categories: The Numbers, Compare Sites, Pollution, Take Action, and Question the AI.</p></div>
+      <div class="feature-card"><div class="feature-icon">⚡</div><h3>Fast responses</h3><p>Powered by Claude Haiku, responses arrive in seconds. A 30-question per session limit keeps API costs manageable for free use.</p></div>
+      <div class="feature-card"><div class="feature-icon">🌐</div><h3>No install needed</h3><p>Runs entirely in the browser. Students just need the link. Works on school laptops, tablets, even phones.</p></div>
+      <div class="feature-card"><div class="feature-icon">🔓</div><h3>Open source</h3><p>Fork it, modify it, run your own instance with your own API key. The code, data, and lesson materials are all on GitHub.</p></div>
+    </div>
+  </div>
+</section>
+<section id="data" class="data-section">
+  <div class="container">
+    <div class="section-label" style="color:#5eead4;">Real data</div>
+    <h2 class="section-title">Thames21 citizen science</h2>
+    <p class="section-sub">All preloaded datasets come from real monitoring programmes run by Thames21 and the Lea Guardians — the same data that informs actual environmental decisions.</p>
+    <div class="dataset-grid">
+      <div class="dataset-card"><div class="dataset-tag">📍 Thames21</div><h3>The Ching — 3-site lesson data</h3><p>Focused dataset across three sites on the River Ching in East London, perfect for comparing upstream vs. downstream pollution patterns in a single lesson.</p><div class="dataset-meta"><span class="meta-chip">3 sites</span><span class="meta-chip">pH · Phosphates · Ammonia</span><span class="meta-chip">KS3 ready</span></div></div>
+      <div class="dataset-card"><div class="dataset-tag">📍 Lea Guardians</div><h3>Lea Guardians — full dataset</h3><p>Multi-site, multi-season dataset from the River Lea catchment. Rich enough for extended investigations and controlled variable comparisons.</p><div class="dataset-meta"><span class="meta-chip">Multiple sites</span><span class="meta-chip">Seasonal data</span><span class="meta-chip">KS4 ready</span></div></div>
+      <div class="dataset-card"><div class="dataset-tag">🎓 Demonstration</div><h3>Sample data — fictional river</h3><p>Synthetic dataset with clearly varied readings, designed for first lessons or demos where you want predictable, illustrative results.</p><div class="dataset-meta"><span class="meta-chip">Fictional data</span><span class="meta-chip">Introductory</span><span class="meta-chip">Safe for demos</span></div></div>
+    </div>
+  </div>
+</section>
+<section id="teachers" class="teachers">
+  <div class="container">
+    <div class="section-label">For teachers</div>
+    <h2 class="section-title">Drop it into any lesson</h2>
+    <p class="section-sub">Works as a one-off activity or a multi-week project. Ties directly to curriculum objectives across several subjects.</p>
+    <div class="teachers-grid">
+      <div>
+        <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;">Curriculum links</h3>
+        <div class="curriculum-tags">
+          <span class="tag geo">KS3 Geography</span><span class="tag sci">KS3 Science</span><span class="tag geo">KS4 Geography</span><span class="tag sci">KS4 Biology</span><span class="tag stem">STEM</span><span class="tag ict">Digital literacy</span><span class="tag sci">Environmental science</span>
+        </div>
+        <ul class="checklist" style="margin-top:2rem;">
+          <li><span class="check">✓</span> Analyse real data — not textbook samples</li>
+          <li><span class="check">✓</span> Evaluate AI critically — “How confident are you?”</li>
+          <li><span class="check">✓</span> Connect local issues to global environmental themes</li>
+          <li><span class="check">✓</span> Write evidence-based arguments using the data</li>
+          <li><span class="check">✓</span> Works as a starter, main activity, or homework</li>
+          <li><span class="check">✓</span> No setup needed — just share the link</li>
+        </ul>
       </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <h3>AI reads the data</h3>
-        <p>The assistant loads the latest readings and is ready to answer questions in context.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <h3>Students investigate</h3>
-        <p>Students question the AI, challenge its answers, and form their own conclusions.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <h3>Take action</h3>
-        <p>Every session ends with a civic output directed at someone who can act on it.</p>
+      <div class="teacher-card">
+        <h3>🎒 Get started today</h3>
+        <p>The app is live right now. Share the link with your class, pick a dataset, and start asking questions. No account required for students.</p>
+        <a href="https://river-ai-rangers.streamlit.app" target="_blank" class="btn-teal">Open the app →</a>
+        <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(13,148,136,0.3);">
+          <p style="font-size:0.85rem;color:#0f766e;margin-bottom:0.6rem;"><strong>Want to add your school’s river data?</strong></p>
+          <p style="font-size:0.85rem;color:#0f766e;">Export your monitoring results as a CSV and upload it directly. The AI will read your column names automatically.</p>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-<hr class="divider">
-
-<div class="section">
-  <div class="section-title">Lessons</div>
-  <div class="section-sub">Fully scripted, curriculum-aligned lessons for KS3/KS4. All free to download and adapt.</div>
-  <div class="lessons">
-    <div class="lesson-card">
-      <div class="lesson-tag">Lesson 1 · 60 min</div>
-      <h3>Meet the River</h3>
-      <p>Read pH, nitrates and phosphates. Form a hypothesis. Question the AI. Write to a decision-maker.</p>
-    </div>
-    <div class="lesson-card">
-      <div class="lesson-tag">Lesson 2 · 60 min</div>
-      <h3>Follow the Pollution</h3>
-      <p>Compare upstream vs downstream data. Build a causal argument. Brief a real stakeholder.</p>
-    </div>
-    <div class="lesson-card">
-      <div class="lesson-tag">Lesson 3 · 60 min</div>
-      <h3>The Oxygen Crisis</h3>
-      <p>Investigate dissolved oxygen. Trace the cascade from nutrients to ecological collapse.</p>
+</section>
+<section class="cta-section">
+  <div class="container">
+    <h2>Ready to investigate your river?</h2>
+    <p>Free, open-source, and live right now. No setup. No account. Just real river science.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="https://river-ai-rangers.streamlit.app" target="_blank" class="btn-primary">🌊 Launch River AI Rangers</a>
+      <a href="https://github.com/Noelia-RG/river-ai-rangers" target="_blank" class="btn-ghost">View source on GitHub</a>
     </div>
   </div>
-</div>
-
-<hr class="divider">
-
-<div class="cta">
-  <h2>Ready to bring this to your school?</h2>
-  <p>Try the live app now, or get in touch to discuss a pilot with your school or trust.</p>
-  <div class="cta-buttons">
-    <a class="btn-primary" href="https://river-ai-rangers.streamlit.app" target="_blank">Open the live app</a>
-    <a class="btn-secondary" href="https://github.com/Noelia-RG/river-ai-rangers" target="_blank">View on GitHub</a>
+</section>
+<footer>
+  <div class="footer-inner">
+    <div><div class="footer-logo">🌊 River AI Rangers</div><div style="margin-top:0.4rem;">Open-source · Free for schools · Real citizen science data</div></div>
+    <div class="footer-links"><a href="https://river-ai-rangers.streamlit.app" target="_blank">App</a><a href="https://github.com/Noelia-RG/river-ai-rangers" target="_blank">GitHub</a><a href="https://www.thames21.org.uk" target="_blank">Thames21</a><a href="https://www.anthropic.com/privacy" target="_blank">Privacy</a></div>
+    <div class="footer-note">AI powered by <a href="https://www.anthropic.com" target="_blank" style="color:#5eead4;">Anthropic Claude</a><br>Data: Thames21 &amp; Lea Guardians</div>
   </div>
-</div>
-
-<div class="footer">
-  <p>River AI Rangers · A project by <strong>Noelia Rufete Gil</strong></p>
-  <p>Open-source AI and citizen science for secondary school environmental education</p>
-  <p style="margin-top:8px">
-    <a href="mailto:rufetegilnoelia@gmail.com">rufetegilnoelia@gmail.com</a> &nbsp;·&nbsp;
-    <a href="https://github.com/Noelia-RG/river-ai-rangers">GitHub</a> &nbsp;·&nbsp;
-    MIT licence
-  </p>
-</div>
-
+</footer>
 </body>
 </html>
