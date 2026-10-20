@@ -1,92 +1,119 @@
 # 🌊 River AI Rangers
 
-**Open-source AI and citizen science for secondary schools.**
+An open-source AI assistant for secondary school students investigating real river water quality data. Built with Anthropic Claude and Streamlit.
 
-River AI Rangers turns school science and geography lessons into live environmental investigations. Students work with real water-quality data from a local river, use an AI assistant to interpret what the numbers mean for ecosystems and human health, and produce genuine civic outputs — letters to councillors, community briefings, school assemblies — directed at real audiences.
-
-Built for secondary school teachers and environmental educators, so that any school near a river, a stream, or a wetland can turn water-quality data into meaningful science, genuine literacy, and real community action.
-
-**No installation. No subscriptions. Free to use.**
+**Live app:** [river-ai-rangers.streamlit.app](https://river-ai-rangers.streamlit.app)  
+**Landing page:** [noelia-rg.github.io/river-ai-rangers](https://noelia-rg.github.io/river-ai-rangers/)
 
 ---
 
-## What's included
+## What it does
 
-- 📋 Full lesson plans (KS3/KS4 / ages 11–16)
-- 📝 Printable pupil worksheets
-- 💬 AI prompt card library for educators
-- 📊 Sample river water-quality data (CSV)
-- 🌊 Live AI assistant — [river-ai-rangers.streamlit.app](https://river-ai-rangers.streamlit.app)
+Students load a citizen science CSV (Thames21 / Lea Guardians datasets are preloaded, or upload your own), then ask an AI assistant questions about the water quality readings in plain English. The app:
 
----
-
-## Who this is for
-
-- Secondary school science and geography teachers (KS3/KS4)
-- Environmental educators and river or ocean action groups
-- Developers interested in open-source AI for education
-- Anyone who believes water deserves better
+- Aggregates large datasets per site and season so Claude can compare all monitoring sites fairly
+- Displays bar charts comparing key indicators (pH, phosphates, ammonia, etc.) across sites
+- Shows healthy reference ranges with citations to UK Environment Agency / Water Framework Directive standards
+- Guards API costs with a per-session question limit (30 questions) and optional class access code
 
 ---
 
-## Principles
+## Files in this repository
 
-- **Secondary-school first** — lessons designed for ages 11–16, KS3/KS4 curriculum-aligned
-- **Action-oriented** — every lesson ends with a real civic output for a real audience
-- **Critical AI literacy** — students are explicitly taught to question and evaluate AI responses
-- **Open-source only** — MIT licence, free to adapt and redeploy
-- **Place-based** — anchored in the specific river nearest the school
-
----
-
-## How it works
-
-1. The teacher uploads a CSV from the local river monitoring group
-2. The AI assistant reads the latest readings and is ready to answer questions in context
-3. Students investigate the data, question the AI, and form their own conclusions
-4. Every session ends with a civic output: a letter, a poster, a briefing, or a speech
+| File | Description |
+|---|---|
+| `app.py` | Main Streamlit application |
+| `index.html` | Landing page (served by GitHub Pages) |
+| `requirements.txt` | Python dependencies for Streamlit Cloud |
+| `ching-river-lesson-data.csv` | Thames21 Ching river 3-site lesson dataset |
+| `lea-guardians-readings.csv` | Lea Guardians full monitoring dataset |
+| `sample-readings.csv` | Fictional demonstration dataset |
+| `tests/test_app.py` | Unit tests for core helper functions |
+| `.github/workflows/test.yml` | GitHub Actions CI (runs tests on every push) |
 
 ---
 
-## Live app
+## Deployment
 
-👉 **[river-ai-rangers.streamlit.app](https://river-ai-rangers.streamlit.app)**
+### Streamlit Community Cloud (recommended)
 
-Powered by Anthropic Claude · Runs in any browser · No installation required
+1. Fork this repository.
+2. Go to [share.streamlit.io](https://share.streamlit.io) and create a new app pointing to your fork and `app.py`.
+3. In **App settings → Secrets**, add:
 
-To run your own instance, add your `ANTHROPIC_API_KEY` to Streamlit Cloud App Settings → Secrets.
+```toml
+ANTHROPIC_API_KEY = "sk-ant-..."
+ACCESS_CODE = "rangers2024"   # optional — remove this line to disable the access gate
+```
+
+The app redeploys automatically on every push to `main`.
+
+> **Note:** Streamlit Community Cloud apps sleep after ~7 days of no visits. The first visit after sleeping takes about 30 seconds to wake up — this is normal.
+
+### Setting a monthly spend limit
+
+To protect against unexpected costs, set a monthly spend limit in the [Anthropic console](https://console.anthropic.com/settings/billing) under **Billing → Usage limits**.
+
+---
+
+## Running locally
+
+```bash
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+Add your API key to `.streamlit/secrets.toml`:
+
+```toml
+ANTHROPIC_API_KEY = "sk-ant-..."
+```
+
+---
+
+## Running tests
+
+```bash
+pip install pandas pytest
+pytest tests/ -v
+```
+
+Tests cover: label sanitisation, season column detection, CSV aggregation logic, and column selection.
+
+---
+
+## Known limitations
+
+- **No seasonal analysis on datasets without a `season` column.** If your CSV has date columns but no `season` column, the seasonal prompt card is hidden and Claude cannot compare seasons. Add a `season` column to your CSV to unlock this.
+- **Large datasets are aggregated.** For datasets with more than 100 rows, Claude works from per-site (and per-season) averages with min/max ranges — not the raw readings. This is necessary because Claude's context window is limited.
+- **pH averaging is approximate.** pH is a logarithmic scale. The app flags this in the sidebar and instructs Claude to caveat pH averages, but students should understand that a mean pH is not the same as a stable pH.
+- **Free-text student questions go to Anthropic's API.** See the privacy section below.
+- **App sleeps after 7 days of inactivity** on the free Streamlit Community Cloud plan. The first visit after sleeping takes ~30 seconds to wake up.
+- **Preloaded datasets are fetched from GitHub** on first load. If GitHub is unavailable, the datasets won't load. Results are cached for 1 hour per session.
 
 ---
 
 ## Data & privacy
 
-Student questions and river data are processed by **Anthropic's Claude API** to generate AI responses. No personally identifiable information should be entered into the chat. River water-quality data is processed transiently to answer each question and is not stored by this application beyond the user's browser session.
-
-Schools deploying this app for students should satisfy themselves that its use is consistent with their own data processing policies. For data processing details, see [Anthropic's privacy policy](https://www.anthropic.com/legal/privacy).
-
----
-
-## Files
-
-| File | Description |
-|------|-------------|
-| `app.py` | Streamlit AI assistant (main app) |
-| `requirements.txt` | Python dependencies |
-| `sample_river_data.csv` | Example CSV from a river monitoring group |
-| `lesson-plan-01.md` | Session 1 — Meet the River (60 min) |
-| `worksheet-01.md` | Pupil worksheet for Session 1 |
-| `ai-prompt-library-01.md` | Prompt card sets A–E |
+- **Student questions** typed in the chat are sent to Anthropic's API to generate AI responses. Students should not enter personal information in the chat.
+- **River data** (the CSV readings) is included in each API request as context for the AI.
+- Anthropic's privacy policy: [anthropic.com/privacy](https://www.anthropic.com/privacy)
+- **Data Protection:** Schools using this tool should consider their obligations under UK GDPR and the Data Protection Act 2018. As student inputs are processed by a third-party AI provider (Anthropic), schools may wish to record this in their Data Protection Impact Assessment (DPIA) or equivalent record of processing activities. We recommend informing students not to enter personal data in the chat interface.
+- The preloaded datasets contain volunteer-collected, publicly available citizen science data. No personal data about students is stored by this application.
 
 ---
 
-## About
+## Curriculum links
 
-River AI Rangers was founded by **Noelia Rufete Gil**, researcher in AI, citizen science and environmental education.
-
-The programme was submitted to the **Convene4Climate Global Awards 2026** in the Technology for Climate category.
-
-📧 rufetegilnoelia@gmail.com
+- **KS3/KS4 Biology:** ecosystems, biodiversity, human impact on the environment
+- **KS3/KS4 Chemistry:** chemical indicators, concentration, pH
+- **KS3/KS4 Geography:** rivers, land use, water cycle
+- **Cross-curricular:** data literacy, scientific enquiry, citizenship
 
 ---
 
-*MIT licence — adapt, translate, and redeploy freely.*
+## Contributing
+
+Pull requests welcome. Please open an issue first if you're planning a significant change.
+
+This project is open source. Data kindly provided by [Thames21](https://www.thames21.org.uk/) and Lea Guardians.
